@@ -1,5 +1,6 @@
 package com.fintech.currency_converter.client;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
@@ -17,6 +18,7 @@ public class FrankfurterApiClient {
     private static final String BASE_URL = "https://api.frankfurter.app";
     private final RestTemplate restTemplate = new RestTemplate();
 
+    @Cacheable(value = "exchangeRates", key = "#fromCurrency + '_' + #toCurrency")
     public BigDecimal getExchangeRate(String fromCurrency, String toCurrency) {
         String url = UriComponentsBuilder.fromHttpUrl(BASE_URL + "/latest")
                 .queryParam("amount", 1)
